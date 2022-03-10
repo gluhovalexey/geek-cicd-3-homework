@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  nest-api:
+    build: ./nest-api
+    command: npm run start
+    depends_on:
+      - db
+    volumes:
+      - ./opt:/nest-api
+    ports:
+      - 3000:3000
+  db:
+    image: mongo:4.0
+    ports: 
+    - 27017:27017
+    volumes:
+      - "mongodb_data:/var/lib/db-data"
+      - "./healthchecks:/healthchecks"
+    healthcheck:
+      test: /healthchecks/mongo.sh
+      interval: "6s"
+volumes:
+  mongodb_data:
